@@ -2516,6 +2516,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-async-storage/async-storage@npm:~1.17.3":
+  version: 1.17.10
+  resolution: "@react-native-async-storage/async-storage@npm:1.17.10"
+  dependencies:
+    merge-options: ^3.0.4
+  peerDependencies:
+    react-native: ^0.0.0-0 || 0.60 - 0.70 || 1000.0.0
+  checksum: 66a49bc82c498e70f2154ab6e25318e370fa1de8bd94fa3225246dfc269a377f9e1af3737dd845e19160c35a6d644383054aaef7e9734c0a84af7b8fe40694cd
+  languageName: node
+  linkType: hard
+
 "@react-native-community/cli-clean@npm:^8.0.4":
   version: 8.0.4
   resolution: "@react-native-community/cli-clean@npm:8.0.4"
@@ -5196,6 +5207,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-device@npm:~4.3.0":
+  version: 4.3.0
+  resolution: "expo-device@npm:4.3.0"
+  dependencies:
+    ua-parser-js: ^0.7.19
+  peerDependencies:
+    expo: "*"
+  checksum: a92536c4177d39f7d4c0e5755fcbc6316ddd3ab39a415f9f711d9ed798e682c61812d6716cece88b022ea60306b011ea637448a65d47e2bacf9c52c5e71c7e5f
+  languageName: node
+  linkType: hard
+
 "expo-error-recovery@npm:~3.2.0":
   version: 3.2.0
   resolution: "expo-error-recovery@npm:3.2.0"
@@ -6584,6 +6606,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-plain-obj@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "is-plain-obj@npm:2.1.0"
+  checksum: cec9100678b0a9fe0248a81743041ed990c2d4c99f893d935545cfbc42876cbe86d207f3b895700c690ad2fa520e568c44afc1605044b535a7820c1d40e38daa
+  languageName: node
+  linkType: hard
+
 "is-plain-object@npm:^2.0.3, is-plain-object@npm:^2.0.4":
   version: 2.0.4
   resolution: "is-plain-object@npm:2.0.4"
@@ -7877,6 +7906,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.12.9
     "@expo/vector-icons": ^13.0.0
+    "@react-native-async-storage/async-storage": ~1.17.3
     "@react-navigation/bottom-tabs": ^6.0.5
     "@react-navigation/native": ^6.0.2
     "@react-navigation/native-stack": ^6.1.0
@@ -7886,6 +7916,7 @@ __metadata:
     expo: ~46.0.9
     expo-asset: ~8.6.1
     expo-constants: ~13.2.4
+    expo-device: ~4.3.0
     expo-font: ~10.2.0
     expo-linking: ~3.2.2
     expo-splash-screen: ~0.16.2
@@ -7964,6 +7995,15 @@ __metadata:
   version: 0.2.0
   resolution: "memory-cache@npm:0.2.0"
   checksum: 255c87fec360ce06818ca7aeb5850d798e14950a9fcea879d88e1f8d1f4a6cffb8ed16da54aa677f5ec8e47773fbe15775a1cdf837ac190e17e9fb4b71e87bee
+  languageName: node
+  linkType: hard
+
+"merge-options@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "merge-options@npm:3.0.4"
+  dependencies:
+    is-plain-obj: ^2.1.0
+  checksum: d86ddb3dd6e85d558dbf25dc944f3527b6bacb944db3fdda6e84a3f59c4e4b85231095f58b835758b9a57708342dee0f8de0dffa352974a48221487fe9f4584f
   languageName: node
   linkType: hard
 
@@ -11352,7 +11392,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ua-parser-js@npm:^0.7.30":
+"ua-parser-js@npm:^0.7.19, ua-parser-js@npm:^0.7.30":
   version: 0.7.31
   resolution: "ua-parser-js@npm:0.7.31"
   checksum: e2f8324a83d1715601576af85b2b6c03890699aaa7272950fc77ea925c70c5e4f75060ae147dc92124e49f7f0e3d6dd2b0a91e7f40d267e92df8894be967ba8b
