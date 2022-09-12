@@ -35,37 +35,31 @@ const useAsyncStorage = <T>(key: string, initialValue: T) => {
   }
 
   useEffect(() => {
-    let isMounted = true;
-
     const loadValue = async () => {
       setIsLoading(true);
       const value = await AsyncStorage.getItem(key);
-      setIsLoading(false);
 
-      if (isMounted) {
-        if (value) {
-          logger.log(
-            "[   AsyncStorage]",
-            `useAsyncStorage(${key}, ${initialValue})`,
-            "Found",
-            value
-          );
-        } else {
-          logger.log(
-            "[   AsyncStorage]",
-            `useAsyncStorage(${key}, ${initialValue})`,
-            "Nothing found for key",
-            key
-          );
-        }
+      if (value) {
+        logger.log(
+          "[   AsyncStorage]",
+          `useAsyncStorage(${key}, ${initialValue})`,
+          "Found",
+          value
+        );
+      } else {
+        logger.log(
+          "[   AsyncStorage]",
+          `useAsyncStorage(${key}, ${initialValue})`,
+          "Nothing found for key",
+          key
+        );
       }
+
+      setStoredValue(value === null ? initialValue : JSON.parse(value));
+      setIsLoading(false);
     };
 
     loadValue().catch((error) => console.error(error));
-
-    return () => {
-      isMounted = false;
-    };
   }, [key, initialValue]);
 
   const setValue = (value: T | ((val: T) => T)) => {
