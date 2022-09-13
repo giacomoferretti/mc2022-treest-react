@@ -35,17 +35,3 @@
 //     BottomTabScreenProps<RootTabParamList, Screen>,
 //     NativeStackScreenProps<RootStackParamList>
 //   >;
-
-export type Terminus = {
-  sname: string;
-  did: number;
-};
-
-export type Line = {
-  terminus1: Terminus;
-  terminus2: Terminus;
-};
-
-export type LinesResponse = {
-  lines: Line[];
-};
