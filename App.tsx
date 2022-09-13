@@ -1,11 +1,20 @@
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Alert, Platform, Pressable, Text, View } from "react-native";
+import {
+  SafeAreaProvider,
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
-import useCachedResources from "./hooks/useCachedResources";
-import useColorScheme from "./hooks/useColorScheme";
-import Navigation from "./navigation";
+import { GlobalProvider } from "@/context/global.context";
+import useCachedResources from "@/hooks/useCachedResources";
+import useColorScheme from "@/hooks/useColorScheme";
+import Navigation from "@/navigation";
+import CounterScreen from "@/screens/CounterScreen";
 
-export default function App() {
+// import Navigation from "./navigation";
+
+const App = () => {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
@@ -13,10 +22,14 @@ export default function App() {
     return null;
   } else {
     return (
-      <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
+      <GlobalProvider>
+        <SafeAreaProvider>
+          <Navigation />
+          <StatusBar />
+        </SafeAreaProvider>
+      </GlobalProvider>
     );
   }
-}
+};
+
+export default App;

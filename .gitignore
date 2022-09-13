@@ -20,3 +20,6 @@ yarn-error.log
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+
+# Custom
+.ignoreme

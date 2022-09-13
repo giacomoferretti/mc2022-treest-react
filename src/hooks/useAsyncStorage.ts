@@ -2,6 +2,47 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
 import { logger } from "@/utils/Logger";
+
+// const usePrevious = <T>(value: T, initialValue: T) => {
+//   const ref = useRef(initialValue);
+//   useEffect(() => {
+//     ref.current = value;
+//   });
+//   return ref.current;
+// };
+
+// const useEffectDebugger = (
+//   effectHook: any,
+//   dependencies: any,
+//   dependencyNames: any = []
+// ) => {
+//   const previousDeps = usePrevious(dependencies, []);
+
+//   const changedDeps = dependencies.reduce(
+//     (accum: any, dependency: any, index: any) => {
+//       if (dependency !== previousDeps[index]) {
+//         const keyName = dependencyNames[index] || index;
+//         return {
+//           ...accum,
+//           [keyName]: {
+//             before: previousDeps[index],
+//             after: dependency,
+//           },
+//         };
+//       }
+
+//       return accum;
+//     },
+//     {}
+//   );
+
+//   if (Object.keys(changedDeps).length) {
+//     logger.log("[use-effect-debugger] ", changedDeps);
+//   }
+
+//   useEffect(effectHook, dependencies);
+// };
+
 const useAsyncStorage = <T>(key: string, initialValue: T) => {
   const [isLoading, setIsLoading] = useState(true);
   const [storedValue, setStoredValue] = useState<T>(initialValue);

@@ -1,9 +1,8 @@
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useCallback, useContext, useEffect } from "react";
 
+import * as TreEstApi from "@/api/treest";
 import { useAsyncStorage } from "@/hooks";
 import { logger } from "@/utils/Logger";
-
-import * as TreEstApi from "../api/treest";
 
 type GlobalContextType = {
   sessionId: string | null; // sid
@@ -40,13 +39,16 @@ const useProvideGlobal = (): GlobalContextType => {
     };
   }, []);
 
-  const getSessionId = () => {
+  const getSessionId = useCallback(() => {
     TreEstApi.register()
       .then((result) => setSessionId(result["sid"]))
       .catch((error) => console.error(error));
-  };
+  }, [setSessionId]);
 
   useEffect(() => {
+    logger.log("[  GlobalContext]", "isLoading =", isLoading);
+    logger.log("[  GlobalContext]", "sessionId =", sessionId);
+
     if (!isLoading) {
       if (sessionId) {
         logger.log("[  GlobalContext]", "sessionId cache =", sessionId);
@@ -55,7 +57,7 @@ const useProvideGlobal = (): GlobalContextType => {
         getSessionId();
       }
     }
-  }, [isLoading]);
+  }, [getSessionId, isLoading, sessionId]);
 
   return {
     sessionId,
