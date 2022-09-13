@@ -9,7 +9,9 @@ const logger = new ConsoleLogger({ tag: "GlobalContext" });
 type GlobalContextType = {
   sessionId: string | null; // sid
   directionId: string | null; // did
+  skipFirstTime: boolean;
   setDirectionId: (value: string) => void;
+  setSkipFirstTime: (value: boolean) => void;
 };
 
 const GlobalContext = createContext<GlobalContextType>({} as GlobalContextType);
@@ -29,6 +31,7 @@ export const useGlobal = () => {
 const STORAGE_KEYS = {
   SID: "sessionId",
   DID: "directionId",
+  SKIP_FIRST_TIME: "skipFirstTime",
 };
 
 const useProvideGlobal = (): GlobalContextType => {
@@ -36,9 +39,13 @@ const useProvideGlobal = (): GlobalContextType => {
     GlobalContextType["sessionId"]
   >(STORAGE_KEYS.SID, null);
 
-  const [directionId, setDirectionId, isLoadingDirectionId] = useAsyncStorage<
+  const [directionId, setDirectionId] = useAsyncStorage<
     GlobalContextType["directionId"]
   >(STORAGE_KEYS.DID, null);
+
+  const [skipFirstTime, setSkipFirstTime] = useAsyncStorage<
+    GlobalContextType["skipFirstTime"]
+  >(STORAGE_KEYS.SKIP_FIRST_TIME, false);
 
   useEffect(() => {
     logger.log("Mounted!");
@@ -55,9 +62,6 @@ const useProvideGlobal = (): GlobalContextType => {
   }, [setSessionId]);
 
   useEffect(() => {
-    logger.log("isLoadingSessionId =", isLoadingSessionId);
-    logger.log("sessionId =", sessionId);
-
     if (!isLoadingSessionId) {
       if (sessionId) {
         logger.log("sessionId cache =", sessionId);
@@ -71,6 +75,8 @@ const useProvideGlobal = (): GlobalContextType => {
   return {
     sessionId,
     directionId,
+    skipFirstTime,
     setDirectionId,
+    setSkipFirstTime,
   };
 };
