@@ -1,4 +1,7 @@
 {
+  "env": {
+    "node": true
+  },
   "extends": [
     "eslint:recommended",
     "plugin:jsx-a11y/recommended",
@@ -18,7 +21,10 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "rules": { "react/react-in-jsx-scope": "off" },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-namespace": "off"
+  },
   "settings": {
     "react": {
       "version": "detect"

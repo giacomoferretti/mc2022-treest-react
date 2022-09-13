@@ -1,3 +1,4 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -28,12 +29,20 @@ const FirstTimeScreen = ({ navigation }: any) => {
       enabled={Platform.OS === "ios"}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         {/* Header */}
-        <LogoIcon
+        {/* <LogoIcon
           fill="black"
           width={64}
           height={64}
           style={{ marginBottom: 16 }}
-        />
+        /> */}
+        <View>
+          <MaterialIcons
+            name="train"
+            size={64}
+            color="black"
+            style={{ marginBottom: 16 }}
+          />
+        </View>
         <View>
           <Text style={styles.title}>Maledetta TreEst</Text>
         </View>

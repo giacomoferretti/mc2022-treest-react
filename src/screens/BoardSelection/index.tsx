@@ -1,24 +1,29 @@
-import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import {
-  Alert,
+  CompositeNavigationProp,
+  useNavigation,
+} from "@react-navigation/native";
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
   FlatList,
-  KeyboardAvoidingView,
   ListRenderItem,
-  Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Line, Terminus } from "types";
 
 import * as TreEstApi from "@/api/treest";
+import { Line } from "@/api/treest/types";
 import { ArrowForwardIcon } from "@/components/icons";
 import { useGlobal } from "@/context/global.context";
+import { RootStackParamList, RootTabParamList } from "@/types/navigation";
 import { logger } from "@/utils/Logger";
 
 const Board = ({
@@ -28,11 +33,20 @@ const Board = ({
   name: string;
   directionId: number;
 }) => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<
+      CompositeNavigationProp<
+        BottomTabNavigationProp<RootTabParamList, "BoardFeed">,
+        NativeStackNavigationProp<RootStackParamList>
+      >
+    >();
 
   const onPress = () => {
     logger.log("[          Board]", "Clicked on", name, directionId);
-    navigation.navigate("BoardFeed" as never, { directionId } as never);
+    navigation.navigate("Main", {
+      screen: "BoardFeed",
+      params: { directionId },
+    });
   };
 
   return (
@@ -53,7 +67,8 @@ const Board = ({
   );
 };
 
-const BoardSelection = ({ navigation }: any) => {
+// {navigation,}: NativeStackScreenProps<RootStackParamList, "BoardSelection">
+const BoardSelection = () => {
   const renderItem: ListRenderItem<Line> = ({ item }) => {
     const lineName = `${item.terminus2.sname} - ${item.terminus1.sname}`;
     const invertedLineName = `${item.terminus1.sname} - ${item.terminus2.sname}`;
@@ -73,7 +88,7 @@ const BoardSelection = ({ navigation }: any) => {
   useEffect(() => {
     const load = async () => {
       if (sessionId) {
-        const response = await TreEstApi.getLines(sessionId);
+        const response = await TreEstApi.getLines({ sid: sessionId });
 
         setLines(response.lines);
       }
@@ -94,10 +109,17 @@ const BoardSelection = ({ navigation }: any) => {
         <Text style={styles.title}>Benvenuto!</Text>
         <Text>Scegli una tratta tra le seguenti</Text>
       </View>
-      <FlatList
-        style={{ width: "100%", paddingHorizontal: 16 }}
-        data={lines}
-        renderItem={renderItem}></FlatList>
+      {lines.length === 0 ? (
+        <View>
+          <ActivityIndicator size="large" color="#000000" />
+          <Text style={{ marginTop: 8 }}>Caricamento...</Text>
+        </View>
+      ) : (
+        <FlatList
+          style={{ width: "100%", paddingHorizontal: 16 }}
+          data={lines}
+          renderItem={renderItem}></FlatList>
+      )}
     </SafeAreaView>
   );
 };
