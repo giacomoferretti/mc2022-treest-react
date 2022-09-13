@@ -66,33 +66,33 @@ export type SidDidRequest = SidRequest & {
   did: string;
 };
 
-export type SetUserRequest = {
+export type SetUserRequest = SidRequest & {
   name?: string;
   picture?: string;
 } & (
-  | {
-      name: string;
-    }
-  | {
-      picture: string;
-    }
-);
+    | {
+        name: string;
+      }
+    | {
+        picture: string;
+      }
+  );
 
-export type AddPostRequest = {
+export type AddPostRequest = SidDidRequest & {
   comment?: string;
   delay?: Delay;
   status?: Status;
 } & (
-  | {
-      comment: string;
-    }
-  | {
-      delay: Delay;
-    }
-  | {
-      status: Status;
-    }
-);
+    | {
+        comment: string;
+      }
+    | {
+        delay: Delay;
+      }
+    | {
+        status: Status;
+      }
+  );
 
 export type LinesResponse = {
   lines: Line[];
