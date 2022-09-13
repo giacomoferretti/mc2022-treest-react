@@ -41,14 +41,14 @@ export type Post = {
 };
 
 export type Profile = {
-  userId: string;
+  uid: string;
   name: string;
   picture: string;
   pversion: string;
 };
 
 export type UserPicture = {
-  userId: string;
+  uid: string;
   pversion: string;
   picture: string;
 };
