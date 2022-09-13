@@ -13,6 +13,7 @@ import * as TreEstApi from "@/api/treest";
 import { Post as PostType } from "@/api/treest/types";
 import { Post } from "@/components/Post";
 import { useGlobal } from "@/context/global.context";
+import { formatDate, parseDate } from "@/utils/date";
 
 const BoardFeed = () => {
   const { sessionId, directionId } = useGlobal();
@@ -23,7 +24,7 @@ const BoardFeed = () => {
     return (
       <Post
         name={item.authorName}
-        date={item.datetime}
+        date={formatDate(parseDate(item.datetime))}
         comment={item.comment}
         delay={item.delay ? item.delay.toString() : ""}
         status={item.status ? item.status.toString() : ""}
@@ -45,7 +46,7 @@ const BoardFeed = () => {
   }, [directionId, sessionId]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {posts.length === 0 ? (
         <View>
           <ActivityIndicator size="large" color="#000000" />
@@ -57,7 +58,7 @@ const BoardFeed = () => {
           data={posts}
           renderItem={renderItem}></FlatList>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
