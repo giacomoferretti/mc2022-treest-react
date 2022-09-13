@@ -1,18 +1,10 @@
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import {
-  CompositeNavigationProp,
-  useNavigation,
-} from "@react-navigation/native";
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
   ListRenderItem,
-  Pressable,
   StyleSheet,
   Text,
   View,
@@ -21,59 +13,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import * as TreEstApi from "@/api/treest";
 import { Line } from "@/api/treest/types";
-import { ArrowForwardIcon } from "@/components/icons";
 import { useGlobal } from "@/context/global.context";
-import { RootStackParamList, RootTabParamList } from "@/types/navigation";
-import { ConsoleLogger } from "@/utils/Logger";
+import { RootStackParamList } from "@/types/navigation";
 
-const Board = ({
-  name,
-  directionId,
-}: {
-  name: string;
-  directionId: number;
-}) => {
-  const logger = new ConsoleLogger({ tag: "Board" });
-
-  const { setDirectionId } = useGlobal();
-
-  const navigation =
-    useNavigation<
-      CompositeNavigationProp<
-        BottomTabNavigationProp<RootTabParamList, "BoardFeed">,
-        NativeStackNavigationProp<RootStackParamList>
-      >
-    >();
-
-  const onPress = () => {
-    logger.log("Clicked on", name, directionId);
-    setDirectionId(directionId);
-    navigation.navigate("Main", { screen: "BoardFeed" });
-  };
-
-  return (
-    <Pressable
-      style={{
-        width: "100%",
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 16,
-        marginVertical: 8,
-      }}
-      onPress={onPress}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Text style={{ flex: 1 }}>{name}</Text>
-        <ArrowForwardIcon fill="black" height={24} width={24} />
-      </View>
-    </Pressable>
-  );
-};
+import { Board } from "./Board";
 
 // {navigation,}: NativeStackScreenProps<RootStackParamList, "BoardSelection">
 const BoardSelection = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const { sessionId, directionId } = useGlobal();
+
+  const { sessionId, directionId, setDirectionId, setLineData } = useGlobal();
   const [lines, setLines] = useState<Line[]>([]);
 
   useEffect(() => {
@@ -83,25 +33,37 @@ const BoardSelection = () => {
   }, [directionId, navigation]);
 
   useEffect(() => {
-    const load = async () => {
-      if (sessionId) {
-        const response = await TreEstApi.getLines({ sid: sessionId });
+    console.log("BRUH");
 
-        setLines(response.lines);
-      }
+    const load = async () => {
+      const response = await TreEstApi.getLines({ sid: sessionId! });
+
+      setLines(response.lines);
     };
 
-    load().catch((error) => console.error(error));
+    if (sessionId) {
+      load().catch((error) => console.error(error));
+    }
   }, [sessionId]);
 
   const renderItem: ListRenderItem<Line> = ({ item }) => {
     const lineName = `${item.terminus2.sname} - ${item.terminus1.sname}`;
     const invertedLineName = `${item.terminus1.sname} - ${item.terminus2.sname}`;
 
+    const onPress = (directionId: number) => {
+      setDirectionId(directionId);
+      setLineData(item);
+
+      navigation.replace("Main", { screen: "BoardFeed" });
+    };
+
     return (
       <>
-        <Board name={lineName} directionId={item.terminus1.did} />
-        <Board name={invertedLineName} directionId={item.terminus2.did} />
+        <Board name={lineName} onPress={() => onPress(item.terminus1.did)} />
+        <Board
+          name={invertedLineName}
+          onPress={() => onPress(item.terminus2.did)}
+        />
       </>
     );
   };

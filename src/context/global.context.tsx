@@ -1,17 +1,66 @@
-import { createContext, useCallback, useContext, useEffect } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 
 import * as TreEstApi from "@/api/treest";
+import { Line } from "@/api/treest/types";
 import { useAsyncStorage } from "@/hooks";
 import { ConsoleLogger } from "@/utils/Logger";
 
 const logger = new ConsoleLogger({ tag: "GlobalContext" });
 
+const usePrevious = <T,>(value: T, initialValue: T) => {
+  const ref = useRef(initialValue);
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+};
+
+const useEffectDebugger = (
+  effectHook: any,
+  dependencies: any,
+  dependencyNames: any = []
+) => {
+  const previousDeps = usePrevious(dependencies, []);
+
+  const changedDeps = dependencies.reduce(
+    (accum: any, dependency: any, index: any) => {
+      if (dependency !== previousDeps[index]) {
+        const keyName = dependencyNames[index] || index;
+        return {
+          ...accum,
+          [keyName]: {
+            before: previousDeps[index],
+            after: dependency,
+          },
+        };
+      }
+
+      return accum;
+    },
+    {}
+  );
+
+  if (Object.keys(changedDeps).length) {
+    logger.log("[use-effect-debugger] ", changedDeps);
+  }
+
+  useEffect(effectHook, dependencies);
+};
+
 type GlobalContextType = {
   sessionId: string | null; // sid
   directionId: number | null; // did
   skipFirstTime: boolean;
-  setDirectionId: (did: number) => void;
-  setSkipFirstTime: (value: boolean) => void;
+  lineData: Line | null;
+  setDirectionId: (did: GlobalContextType["directionId"]) => void;
+  setSkipFirstTime: (value: GlobalContextType["skipFirstTime"]) => void;
+  setLineData: (line: GlobalContextType["lineData"]) => void;
 };
 
 const GlobalContext = createContext<GlobalContextType>({} as GlobalContextType);
@@ -32,6 +81,7 @@ const STORAGE_KEYS = {
   SID: "sessionId",
   DID: "directionId",
   SKIP_FIRST_TIME: "skipFirstTime",
+  LINE_DATA: "lineData",
 };
 
 const useProvideGlobal = (): GlobalContextType => {
@@ -47,6 +97,10 @@ const useProvideGlobal = (): GlobalContextType => {
     GlobalContextType["skipFirstTime"]
   >(STORAGE_KEYS.SKIP_FIRST_TIME, false);
 
+  const [lineData, setLineData] = useAsyncStorage<
+    GlobalContextType["lineData"]
+  >(STORAGE_KEYS.LINE_DATA, null);
+
   useEffect(() => {
     logger.log("Mounted!");
 
@@ -55,13 +109,13 @@ const useProvideGlobal = (): GlobalContextType => {
     };
   }, []);
 
-  const getSessionId = useCallback(() => {
-    TreEstApi.register()
-      .then((result) => setSessionId(result["sid"]))
-      .catch((error) => console.error(error));
-  }, [setSessionId]);
-
   useEffect(() => {
+    const getSessionId = () => {
+      TreEstApi.register()
+        .then((result) => setSessionId(result["sid"]))
+        .catch((error) => console.error(error));
+    };
+
     if (!isLoadingSessionId) {
       if (sessionId) {
         logger.log("sessionId cache =", sessionId);
@@ -70,13 +124,16 @@ const useProvideGlobal = (): GlobalContextType => {
         getSessionId();
       }
     }
-  }, [getSessionId, isLoadingSessionId, sessionId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoadingSessionId, sessionId]);
 
   return {
     sessionId,
     directionId,
     skipFirstTime,
+    lineData,
     setDirectionId,
     setSkipFirstTime,
+    setLineData,
   };
 };

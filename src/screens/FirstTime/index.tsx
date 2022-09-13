@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 9999,
     elevation: 0,
-    backgroundColor: "black",
+    backgroundColor: "#006E03",
   },
   buttonDisabled: {
     alignItems: "center",

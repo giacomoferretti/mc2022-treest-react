@@ -2,8 +2,9 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { ColorSchemeName } from "react-native";
+import { View } from "react-native";
 
-// import { Pressable } from "react-native";
 import BoardSelectionScreen from "@/screens/BoardSelection";
 // import CounterScreen from "@/screens/CounterScreen";
 import FirstTimeScreen from "@/screens/FirstTime";
@@ -14,7 +15,7 @@ import { RootStackParamList, RootTabParamList } from "@/types/navigation";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const Navigation = () => {
+const Navigation = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -47,9 +48,11 @@ const BottomTabNavigator = () => {
     <BottomTab.Navigator
       initialRouteName="BoardFeed"
       screenOptions={{
-        // tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarInactiveTintColor: "#42473E",
+        tabBarActiveTintColor: "#121F0E", //Colors[colorScheme].tint,
         tabBarStyle: {
           height: 64, // 49 default
+          backgroundColor: "#E7F1E1",
         },
         tabBarLabelStyle: {
           marginBottom: 8,
