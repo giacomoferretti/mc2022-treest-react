@@ -7,6 +7,7 @@ import { GlobalProvider } from "@/context/global.context";
 import useCachedResources from "@/hooks/useCachedResources";
 import useColorScheme from "@/hooks/useColorScheme";
 import Navigation from "@/navigation";
+import "@/utils/Storage";
 
 const App = () => {
   const isLoadingComplete = useCachedResources();
