@@ -82,17 +82,18 @@ export type AddPostRequest = SidDidRequest & {
   comment?: string;
   delay?: Delay;
   status?: Status;
-} & (
-    | {
-        comment: string;
-      }
-    | {
-        delay: Delay;
-      }
-    | {
-        status: Status;
-      }
-  );
+};
+// } & (
+//     | {
+//         comment: string;
+//       }
+//     | {
+//         delay: Delay;
+//       }
+//     | {
+//         status: Status;
+//       }
+//   );
 
 export type LinesResponse = {
   lines: Line[];

@@ -1,20 +1,34 @@
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import Toast from "react-native-root-toast";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import * as TreEstApi from "@/api/treest";
 import { DelayDisplayValue, StatusDisplayValue } from "@/api/treest/objects";
 import { Delay, Status } from "@/api/treest/types";
 import { useGlobal } from "@/context/global.context";
 
-import { Post } from "../BoardFeed/Post";
-
 const NewPost = () => {
-  const { lineData } = useGlobal();
+  const { sessionId, directionId, lineData } = useGlobal();
 
-  const [comment, setComment] = useState("");
-  const [delay, setDelay] = useState();
-  const [status, setStatus] = useState();
+  const [comment, setComment] = useState<string | undefined>();
+  const [delay, setDelay] = useState<Delay | undefined>();
+  const [status, setStatus] = useState<Status | undefined>();
+
+  const submitPost = () => {
+    TreEstApi.addPost({
+      sid: sessionId!,
+      did: directionId!,
+      comment,
+      delay,
+      status,
+    }).then(() => {
+      Toast.show("Request failed to send.", {
+        duration: Toast.durations.LONG,
+      });
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,10 +63,14 @@ const NewPost = () => {
           }}>
           <Picker
             mode="dropdown"
-            selectedValue={delay}
+            selectedValue={status}
             itemStyle={{ padding: 12 }}
-            onValueChange={(itemValue, itemIndex) => setDelay(itemValue)}>
-            <Picker.Item label="Stato" value="" style={{ color: "gray" }} />
+            onValueChange={(itemValue, itemIndex) => setStatus(itemValue)}>
+            <Picker.Item
+              label="Stato"
+              value={undefined}
+              style={{ color: "gray" }}
+            />
             <Picker.Item
               label={StatusDisplayValue[Status.Ideal]}
               value={Status.Ideal}
@@ -77,10 +95,14 @@ const NewPost = () => {
           }}>
           <Picker
             mode="dropdown"
-            selectedValue={status}
+            selectedValue={delay}
             itemStyle={{ padding: 12 }}
-            onValueChange={(itemValue, itemIndex) => setStatus(itemValue)}>
-            <Picker.Item label="Ritardo" value="" style={{ color: "gray" }} />
+            onValueChange={(itemValue, itemIndex) => setDelay(itemValue)}>
+            <Picker.Item
+              label="Ritardo"
+              value={undefined}
+              style={{ color: "gray" }}
+            />
             <Picker.Item
               label={DelayDisplayValue[Delay.OnTime]}
               value={Delay.OnTime}
@@ -101,7 +123,9 @@ const NewPost = () => {
         </View>
       </View>
 
-      <Pressable style={[styles.button, { marginTop: 16 }]}>
+      <Pressable
+        onPress={submitPost}
+        style={[styles.button, { marginTop: 16 }]}>
         <Text style={styles.text}>Va bene così!</Text>
       </Pressable>
     </SafeAreaView>
