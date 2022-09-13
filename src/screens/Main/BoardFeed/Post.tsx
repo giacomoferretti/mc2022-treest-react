@@ -108,6 +108,7 @@ export const Post = ({
         borderWidth: 1,
         borderRadius: 4,
         padding: 16,
+        marginBottom: 16,
       }}>
       {/* Left panel */}
       <View style={{ flexDirection: "row" }}>
