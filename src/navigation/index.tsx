@@ -59,6 +59,7 @@ const BottomTabNavigator = () => {
         name="BoardFeed"
         component={BoardFeed}
         options={{
+          headerShown: false,
           title: "Feed",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
@@ -74,6 +75,7 @@ const BottomTabNavigator = () => {
         name="NewPost"
         component={NewPost}
         options={{
+          headerShown: false,
           title: "Nuovo",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
@@ -89,6 +91,7 @@ const BottomTabNavigator = () => {
         name="Profile"
         component={Profile}
         options={{
+          headerShown: false,
           title: "Profilo",
           tabBarIcon: ({ color }) => (
             <MaterialIcons
