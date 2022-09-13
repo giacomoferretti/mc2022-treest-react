@@ -1,5 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -11,16 +13,38 @@ import {
   View,
 } from "react-native";
 
-import { LogoIcon } from "@/components/icons";
-import { logger } from "@/utils/Logger";
+import * as TreEstApi from "@/api/treest";
+import { useGlobal } from "@/context/global.context";
+import { RootStackParamList } from "@/types/navigation";
+// import { LogoIcon } from "@/components/icons";
+import { ConsoleLogger } from "@/utils/Logger";
 
-const FirstTimeScreen = ({ navigation }: any) => {
+const logger = new ConsoleLogger({ tag: "FirstTimeScreen" });
+
+const FirstTimeScreen = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const { sessionId, skipFirstTime, setSkipFirstTime } = useGlobal();
+
   const [name, setName] = useState("");
 
   const onPress = () => {
-    logger.log("[FirstTimeScreen]", "Go to next page with name =", name);
-    navigation.replace("BoardSelection");
+    logger.log("Go to next page with name =", name);
+
+    TreEstApi.setProfile({
+      sid: sessionId!,
+      name: name,
+    }).then(() => {
+      setSkipFirstTime(true);
+    });
   };
+
+  useEffect(() => {
+    if (skipFirstTime) {
+      navigation.replace("BoardSelection");
+    }
+  }, [navigation, skipFirstTime]);
 
   return (
     <KeyboardAvoidingView
