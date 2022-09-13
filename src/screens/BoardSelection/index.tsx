@@ -71,21 +71,16 @@ const Board = ({
 
 // {navigation,}: NativeStackScreenProps<RootStackParamList, "BoardSelection">
 const BoardSelection = () => {
-  const renderItem: ListRenderItem<Line> = ({ item }) => {
-    const lineName = `${item.terminus2.sname} - ${item.terminus1.sname}`;
-    const invertedLineName = `${item.terminus1.sname} - ${item.terminus2.sname}`;
-
-    return (
-      <>
-        <Board name={lineName} directionId={item.terminus1.did} />
-        <Board name={invertedLineName} directionId={item.terminus2.did} />
-      </>
-    );
-  };
-
-  const { sessionId } = useGlobal();
-
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { sessionId, directionId } = useGlobal();
   const [lines, setLines] = useState<Line[]>([]);
+
+  useEffect(() => {
+    if (directionId) {
+      navigation.replace("Main", { screen: "BoardFeed" });
+    }
+  }, [directionId, navigation]);
 
   useEffect(() => {
     const load = async () => {
@@ -98,6 +93,18 @@ const BoardSelection = () => {
 
     load().catch((error) => console.error(error));
   }, [sessionId]);
+
+  const renderItem: ListRenderItem<Line> = ({ item }) => {
+    const lineName = `${item.terminus2.sname} - ${item.terminus1.sname}`;
+    const invertedLineName = `${item.terminus1.sname} - ${item.terminus2.sname}`;
+
+    return (
+      <>
+        <Board name={lineName} directionId={item.terminus1.did} />
+        <Board name={invertedLineName} directionId={item.terminus2.did} />
+      </>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>

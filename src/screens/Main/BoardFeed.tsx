@@ -14,9 +14,8 @@ import { Post as PostType } from "@/api/treest/types";
 import { Post } from "@/components/Post";
 import { useGlobal } from "@/context/global.context";
 
-const BoardFeed = ({ route }: any) => {
-  const { sessionId } = useGlobal();
-  const { directionId } = route.params;
+const BoardFeed = () => {
+  const { sessionId, directionId } = useGlobal();
 
   const [posts, setPosts] = useState<PostType[]>([]);
 
@@ -36,7 +35,7 @@ const BoardFeed = ({ route }: any) => {
     const load = async () => {
       const response = await TreEstApi.getPosts({
         sid: sessionId!,
-        did: directionId,
+        did: directionId!,
       });
 
       setPosts(response.posts);
