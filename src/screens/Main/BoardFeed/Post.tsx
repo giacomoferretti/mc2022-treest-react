@@ -7,6 +7,7 @@ import { Post as PostType } from "@/api/treest/types";
 import { CheckBox } from "@/components/CheckBox";
 import { useGlobal } from "@/context/global.context";
 import { ConsoleLogger } from "@/utils/Logger";
+import * as Storage from "@/utils/Storage";
 import { formatDate, parseDate } from "@/utils/date";
 
 // type PostProps = {
@@ -18,6 +19,9 @@ import { formatDate, parseDate } from "@/utils/date";
 // };
 
 const logger = new ConsoleLogger({ tag: "Post" });
+
+const placeholder =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIAAQMAAADOtka5AAAAA1BMVEWfn5/HXNoXAAAANklEQVR42u3BAQEAAACCoP6vbojAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADiDoIAAAEB9TdeAAAAAElFTkSuQmCC";
 
 export const Post = ({
   author,
@@ -51,6 +55,39 @@ export const Post = ({
 
   const [checked, onChange] = useState(followingAuthor);
 
+  const [picture, setPicture] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadImage = async () => {
+      const dbImage = await Storage.loadPicture({ uid: author, pversion });
+
+      if (!dbImage) {
+        const hasImage = await Storage.hasPicture({ uid: author, pversion });
+
+        if (!hasImage) {
+          logger.log("Picture for", author, "not found. Downloading...");
+
+          // Download image
+          const remotePicture = await TreEstApi.getUserPicture({
+            sid: sessionId!,
+            uid: author,
+          });
+
+          setPicture(remotePicture.picture);
+
+          Storage.insertPicture(remotePicture)
+            .then((a) => logger.log(a))
+            .catch((e) => logger.error(e));
+        }
+      } else {
+        logger.log("Picture for", author, "found!");
+        setPicture(dbImage);
+      }
+    };
+
+    loadImage();
+  }, []);
+
   const onChangeFollow = (isChecked: boolean) => {
     console.log(isChecked);
     onChange(isChecked);
@@ -78,7 +115,7 @@ export const Post = ({
           <Image
             style={{ width: 64, height: 64, borderRadius: 9999 }}
             source={{
-              uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIAAQMAAADOtka5AAAAA1BMVEWfn5/HXNoXAAAANklEQVR42u3BAQEAAACCoP6vbojAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADiDoIAAAEB9TdeAAAAAElFTkSuQmCC",
+              uri: picture ? `data:image/png;base64,${picture}` : placeholder,
             }}
           />
           <CheckBox

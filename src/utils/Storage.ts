@@ -5,8 +5,9 @@ import { UserPicture } from "@/api/treest/types";
 import { ConsoleLogger } from "./Logger";
 
 const queries = {
+  DROP_TABLE: "DROP TABLE`user_picture`;",
   CREATE_TABLE:
-    "CREATE TABLE IF NOT EXISTS `user_picture` (`uid` TEXT NOT NULL, `pversion` TEXT NOT NULL, `picture` TEXT NOT NULL, PRIMARY KEY (`uid`, `pversion`));",
+    "CREATE TABLE IF NOT EXISTS `user_picture` (`uid` TEXT NOT NULL, `pversion` TEXT NOT NULL, `picture` TEXT, PRIMARY KEY (`uid`, `pversion`));",
   FIND: "SELECT * FROM `user_picture` WHERE `uid` LIKE ? AND `pversion` LIKE ? LIMIT 1;",
   INSERT:
     "INSERT OR REPLACE INTO `user_picture` (`uid`,`pversion`,`picture`) VALUES (?,?,?);",
@@ -17,16 +18,13 @@ const logger = new ConsoleLogger({ tag: "Storage" });
 
 export const db = SQLite.openDatabase("treest");
 
+// db.transaction((tx) => {
+//   tx.executeSql(queries.DROP_TABLE);
+//   logger.log("`user_picture` deleted.");
+// });
+
 db.transaction((tx) => {
-  tx.executeSql(
-    queries.CREATE_TABLE,
-    [],
-    (a, result) => logger.log(result),
-    (a, error) => {
-      logger.error(error);
-      return false;
-    }
-  );
+  tx.executeSql(queries.CREATE_TABLE);
   logger.log("`user_picture` created.");
 });
 
@@ -54,7 +52,7 @@ export const getAllRows = async () => {
 
 export const insertPicture = async (input: UserPicture) => {
   return await transactionPromise(queries.INSERT, [
-    input.userId,
+    input.uid,
     input.pversion,
     input.picture,
   ]);
@@ -62,13 +60,24 @@ export const insertPicture = async (input: UserPicture) => {
 
 export const loadPicture = async (input: Omit<UserPicture, "picture">) => {
   const result = await transactionPromise(queries.FIND, [
-    input.userId,
+    input.uid,
     input.pversion,
   ]);
 
-  if (result.length > 0) {
+  if (result.length !== 0) {
     return (result[0] as UserPicture).picture;
   } else {
     return null;
   }
 };
+
+export const hasPicture = async (input: Omit<UserPicture, "picture">) => {
+  const result = await transactionPromise(queries.FIND, [
+    input.uid,
+    input.pversion,
+  ]);
+
+  return result.length > 0;
+};
+
+// getAllRows().then((result) => logger.log(result));
