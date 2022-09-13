@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { DelayDisplayValue, StatusDisplayValue } from "@/api/treest/objects";
 import { Delay, Status } from "@/api/treest/types";
 import { useGlobal } from "@/context/global.context";
 
@@ -52,13 +53,16 @@ const NewPost = () => {
             itemStyle={{ padding: 12 }}
             onValueChange={(itemValue, itemIndex) => setDelay(itemValue)}>
             <Picker.Item label="Stato" value="" style={{ color: "gray" }} />
-            <Picker.Item label="Situazione ideale" value={Status.Ideal} />
             <Picker.Item
-              label="Situazione accettabile"
+              label={StatusDisplayValue[Status.Ideal]}
+              value={Status.Ideal}
+            />
+            <Picker.Item
+              label={StatusDisplayValue[Status.Acceptable]}
               value={Status.Acceptable}
             />
             <Picker.Item
-              label="Gravi problemi per i passeggeri"
+              label={StatusDisplayValue[Status.HasProblems]}
               value={Status.HasProblems}
             />
           </Picker>
@@ -77,13 +81,22 @@ const NewPost = () => {
             itemStyle={{ padding: 12 }}
             onValueChange={(itemValue, itemIndex) => setStatus(itemValue)}>
             <Picker.Item label="Ritardo" value="" style={{ color: "gray" }} />
-            <Picker.Item label="In orario" value={Delay.OnTime} />
-            <Picker.Item label="Ritardo di pochi minuti" value={Delay.Minor} />
             <Picker.Item
-              label="Ritardo di oltre 15 minuti"
+              label={DelayDisplayValue[Delay.OnTime]}
+              value={Delay.OnTime}
+            />
+            <Picker.Item
+              label={DelayDisplayValue[Delay.Minor]}
+              value={Delay.Minor}
+            />
+            <Picker.Item
+              label={DelayDisplayValue[Delay.Major]}
               value={Delay.Major}
             />
-            <Picker.Item label="Treni soppressi" value={Delay.Cancelled} />
+            <Picker.Item
+              label={DelayDisplayValue[Delay.Cancelled]}
+              value={Delay.Cancelled}
+            />
           </Picker>
         </View>
       </View>

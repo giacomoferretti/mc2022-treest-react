@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
 import * as TreEstApi from "@/api/treest";
+import { DelayDisplayValue, StatusDisplayValue } from "@/api/treest/objects";
 import { Post as PostType } from "@/api/treest/types";
 import { CheckBox } from "@/components/CheckBox";
 import { useGlobal } from "@/context/global.context";
@@ -166,14 +167,14 @@ export const Post = ({
           {/* Delay */}
           {delay ? (
             <View style={styles.chipContainer}>
-              <Text style={styles.chipText}>{delay.toString()}</Text>
+              <Text style={styles.chipText}>{DelayDisplayValue[delay]}</Text>
             </View>
           ) : null}
 
           {/* Status */}
           {status ? (
             <View style={styles.chipContainer}>
-              <Text style={styles.chipText}>{status.toString()}</Text>
+              <Text style={styles.chipText}>{StatusDisplayValue[status]}</Text>
             </View>
           ) : null}
         </View>
