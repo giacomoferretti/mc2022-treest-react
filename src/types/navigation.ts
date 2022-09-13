@@ -21,7 +21,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;
 
 export type RootTabParamList = {
-  BoardFeed: { directionId: number };
+  BoardFeed: undefined;
   NewPost: undefined;
   Profile: undefined;
 };

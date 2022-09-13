@@ -24,7 +24,7 @@ import { Line } from "@/api/treest/types";
 import { ArrowForwardIcon } from "@/components/icons";
 import { useGlobal } from "@/context/global.context";
 import { RootStackParamList, RootTabParamList } from "@/types/navigation";
-import { logger } from "@/utils/Logger";
+import { ConsoleLogger } from "@/utils/Logger";
 
 const Board = ({
   name,
@@ -33,6 +33,10 @@ const Board = ({
   name: string;
   directionId: number;
 }) => {
+  const logger = new ConsoleLogger({ tag: "Board" });
+
+  const { setDirectionId } = useGlobal();
+
   const navigation =
     useNavigation<
       CompositeNavigationProp<
@@ -42,11 +46,9 @@ const Board = ({
     >();
 
   const onPress = () => {
-    logger.log("[          Board]", "Clicked on", name, directionId);
-    navigation.navigate("Main", {
-      screen: "BoardFeed",
-      params: { directionId },
-    });
+    logger.log("Clicked on", name, directionId);
+    setDirectionId(directionId);
+    navigation.navigate("Main", { screen: "BoardFeed" });
   };
 
   return (
