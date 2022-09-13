@@ -8,9 +8,9 @@ const logger = new ConsoleLogger({ tag: "GlobalContext" });
 
 type GlobalContextType = {
   sessionId: string | null; // sid
-  directionId: string | null; // did
+  directionId: number | null; // did
   skipFirstTime: boolean;
-  setDirectionId: (value: string) => void;
+  setDirectionId: (did: number) => void;
   setSkipFirstTime: (value: boolean) => void;
 };
 

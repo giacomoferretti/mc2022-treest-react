@@ -63,7 +63,7 @@ export type SidUidRequest = SidRequest & {
 };
 
 export type SidDidRequest = SidRequest & {
-  did: string;
+  did: number;
 };
 
 export type SetUserRequest = SidRequest & {
