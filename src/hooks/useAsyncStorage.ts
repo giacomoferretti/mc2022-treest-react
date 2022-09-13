@@ -1,7 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
-import { logger } from "@/utils/Logger";
+import { ConsoleLogger } from "@/utils/Logger";
+
+const logger = new ConsoleLogger({ tag: "AsyncStorage" });
 
 // const usePrevious = <T>(value: T, initialValue: T) => {
 //   const ref = useRef(initialValue);
@@ -48,32 +50,22 @@ const useAsyncStorage = <T>(key: string, initialValue: T) => {
   const [storedValue, setStoredValue] = useState<T>(initialValue);
 
   // Debugging purposes only
-  if (__DEV__) {
-    useEffect(() => {
-      logger.log(
-        "[   AsyncStorage]",
-        `useAsyncStorage(${key}, ${initialValue})`,
-        "Mounted!"
-      );
 
-      return () => {
-        logger.log(
-          "[   AsyncStorage]",
-          `useAsyncStorage(${key}, ${initialValue})`,
-          "Unmounted!"
-        );
-      };
-    }, []);
+  useEffect(() => {
+    logger.log(`useAsyncStorage(${key}, ${initialValue})`, "Mounted!");
 
-    useEffect(() => {
-      logger.log(
-        "[   AsyncStorage]",
-        `useAsyncStorage(${key}, ${initialValue})`,
-        "isLoading =",
-        isLoading
-      );
-    }, [isLoading]);
-  }
+    return () => {
+      logger.log(`useAsyncStorage(${key}, ${initialValue})`, "Unmounted!");
+    };
+  }, []);
+
+  useEffect(() => {
+    logger.log(
+      `useAsyncStorage(${key}, ${initialValue})`,
+      "isLoading =",
+      isLoading
+    );
+  }, [isLoading]);
 
   useEffect(() => {
     const loadValue = async () => {
@@ -81,15 +73,9 @@ const useAsyncStorage = <T>(key: string, initialValue: T) => {
       const value = await AsyncStorage.getItem(key);
 
       if (value) {
-        logger.log(
-          "[   AsyncStorage]",
-          `useAsyncStorage(${key}, ${initialValue})`,
-          "Found",
-          value
-        );
+        logger.log(`useAsyncStorage(${key}, ${initialValue})`, "Found", value);
       } else {
         logger.log(
-          "[   AsyncStorage]",
           `useAsyncStorage(${key}, ${initialValue})`,
           "Nothing found for key",
           key
@@ -106,7 +92,7 @@ const useAsyncStorage = <T>(key: string, initialValue: T) => {
   const setValue = (value: T | ((val: T) => T)) => {
     const valueToStore = value instanceof Function ? value(storedValue) : value;
 
-    logger.log("[AsyncStorage] Saving", valueToStore);
+    logger.log("Saving", valueToStore);
 
     setStoredValue(valueToStore);
 

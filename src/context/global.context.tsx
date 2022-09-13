@@ -2,7 +2,9 @@ import { createContext, useCallback, useContext, useEffect } from "react";
 
 import * as TreEstApi from "@/api/treest";
 import { useAsyncStorage } from "@/hooks";
-import { logger } from "@/utils/Logger";
+import { ConsoleLogger } from "@/utils/Logger";
+
+const logger = new ConsoleLogger({ tag: "GlobalContext" });
 
 type GlobalContextType = {
   sessionId: string | null; // sid
@@ -32,10 +34,10 @@ const useProvideGlobal = (): GlobalContextType => {
   >(STORAGE_KEYS.SID, null);
 
   useEffect(() => {
-    logger.log("[  GlobalContext]", "Mounted!");
+    logger.log("Mounted!");
 
     return () => {
-      logger.log("[  GlobalContext]", "UnMounted!");
+      logger.log("UnMounted!");
     };
   }, []);
 
@@ -46,14 +48,14 @@ const useProvideGlobal = (): GlobalContextType => {
   }, [setSessionId]);
 
   useEffect(() => {
-    logger.log("[  GlobalContext]", "isLoading =", isLoading);
-    logger.log("[  GlobalContext]", "sessionId =", sessionId);
+    logger.log("isLoading =", isLoading);
+    logger.log("sessionId =", sessionId);
 
     if (!isLoading) {
       if (sessionId) {
-        logger.log("[  GlobalContext]", "sessionId cache =", sessionId);
+        logger.log("sessionId cache =", sessionId);
       } else {
-        logger.log("[  GlobalContext]", "Requesting new sessionId...");
+        logger.log("Requesting new sessionId...");
         getSessionId();
       }
     }

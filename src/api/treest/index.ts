@@ -1,4 +1,4 @@
-import { logger } from "@/utils/Logger";
+import { ConsoleLogger } from "@/utils/Logger";
 
 import {
   AddPostRequest,
@@ -12,6 +12,8 @@ import {
   StationsResponse,
   UserPicture,
 } from "./types";
+
+const logger = new ConsoleLogger({ tag: "TreEstApi" });
 
 export const BASE_API_URL = "https://ewserver.di.unimi.it/mobicomp/treest";
 
@@ -28,7 +30,7 @@ export type Endpoints =
   | "unfollow";
 
 export const request = async (endpoint: Endpoints, data?: unknown) => {
-  logger.log("[      TreEstAPI]", `${endpoint}(${JSON.stringify(data)})`);
+  logger.log(`${endpoint}(${JSON.stringify(data)})`);
   const response = await fetch(`${BASE_API_URL}/${endpoint}.php`, {
     method: "POST",
     headers: {
@@ -36,7 +38,7 @@ export const request = async (endpoint: Endpoints, data?: unknown) => {
     },
     body: data ? JSON.stringify(data) : null,
   });
-  logger.log("[      TreEstAPI]", `${endpoint}(${JSON.stringify(data)})`);
+  logger.log(`${endpoint}(${JSON.stringify(data)})`);
   return response;
 };
 
