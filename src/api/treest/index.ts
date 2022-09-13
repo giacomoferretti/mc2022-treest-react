@@ -27,19 +27,7 @@ export type Endpoints =
   | "follow"
   | "unfollow";
 
-// type Endpoints = Register | GetLines;
-
-// type Register = {
-//   endpoint: "register";
-//   data: null;
-// };
-
-// type GetLines = {
-//   endpoint: "getLines";
-//   data: { sid: string };
-// };
-
-export const request = async (endpoint: Endpoints, data?: any) => {
+export const request = async (endpoint: Endpoints, data?: unknown) => {
   logger.log("[      TreEstAPI]", `${endpoint}(${JSON.stringify(data)})`);
   const response = await fetch(`${BASE_API_URL}/${endpoint}.php`, {
     method: "POST",
