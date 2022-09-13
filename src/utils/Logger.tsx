@@ -24,13 +24,14 @@ export class ConsoleLogger implements Logger {
   readonly warn: LogFn;
   readonly error: LogFn;
 
-  constructor(options?: { level?: LogLevel }) {
-    const { level } = options || {};
+  constructor(options?: { tag: string; level?: LogLevel }) {
+    const { tag, level } = options || { tag: "App", level: "log" };
 
-    this.error = console.error.bind(
-      console,
-      `[${Platform.OS.substring(0, 3)}]`
-    );
+    const prefix = `[${Platform.OS.substring(0, 3)}/${tag
+      .substring(0, 15)
+      .padStart(15)}]`;
+
+    this.error = console.error.bind(console, prefix);
 
     if (level === "error") {
       this.warn = NO_OP;
@@ -39,7 +40,7 @@ export class ConsoleLogger implements Logger {
       return;
     }
 
-    this.warn = console.warn.bind(console, `[${Platform.OS.substring(0, 3)}]`);
+    this.warn = console.warn.bind(console, prefix);
 
     if (level === "warn") {
       this.log = NO_OP;
@@ -47,8 +48,8 @@ export class ConsoleLogger implements Logger {
       return;
     }
 
-    this.log = console.log.bind(console, `[${Platform.OS.substring(0, 3)}]`);
+    this.log = console.log.bind(console, prefix);
   }
 }
 
-export const logger = new ConsoleLogger({ level: "log" });
+export const logger = new ConsoleLogger();
