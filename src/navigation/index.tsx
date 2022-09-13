@@ -2,8 +2,8 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Pressable } from "react-native";
 
+// import { Pressable } from "react-native";
 import BoardSelectionScreen from "@/screens/BoardSelection";
 // import CounterScreen from "@/screens/CounterScreen";
 import FirstTimeScreen from "@/screens/FirstTime";
@@ -33,11 +33,6 @@ const Navigation = () => {
           component={BottomTabNavigator}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen
-          name="Counter"
-          component={CounterScreen}
-          options={{ headerShown: false }}
-        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -51,10 +46,15 @@ const BottomTabNavigator = () => {
   return (
     <BottomTab.Navigator
       initialRouteName="BoardFeed"
-      // screenOptions={{
-      //   tabBarActiveTintColor: Colors[colorScheme].tint,
-      // }}
-    >
+      screenOptions={{
+        // tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarStyle: {
+          height: 64, // 49 default
+        },
+        tabBarLabelStyle: {
+          marginBottom: 8,
+        },
+      }}>
       <BottomTab.Screen
         name="BoardFeed"
         component={BoardFeed}
