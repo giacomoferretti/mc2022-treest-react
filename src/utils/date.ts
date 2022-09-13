@@ -1,7 +1,7 @@
 export const parseDate = (date: string) => {
   console.log(date);
 
-  const result = /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/.exec(date)!;
+  const result = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/.exec(date)!;
   console.log(result);
 
   return new Date(
