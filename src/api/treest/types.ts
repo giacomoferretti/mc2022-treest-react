@@ -104,5 +104,5 @@ export type PostsResponse = {
 };
 
 export type StationsResponse = {
-  stations: Station[];
+  stations: (Omit<Station, "lat" | "lon"> & { lat: string; lon: string })[];
 };

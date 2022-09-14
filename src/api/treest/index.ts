@@ -9,6 +9,7 @@ import {
   SidDidRequest,
   SidRequest,
   SidUidRequest,
+  Station,
   StationsResponse,
   UserPicture,
 } from "./types";
@@ -68,10 +69,16 @@ export const getLines = async (data: SidRequest): Promise<LinesResponse> => {
   return await request("getLines", data);
 };
 
-export const getStations = async (
-  data: SidDidRequest
-): Promise<StationsResponse> => {
-  return await request("getStations", data);
+export const getStations = async (data: SidDidRequest): Promise<Station[]> => {
+  const response: StationsResponse = await request("getStations", data);
+
+  return response.stations.map((x) => {
+    return {
+      sname: x.sname,
+      lat: parseFloat(x.lat),
+      lon: parseFloat(x.lon),
+    };
+  });
 };
 
 export const getPosts = async (data: SidDidRequest): Promise<PostsResponse> => {
