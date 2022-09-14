@@ -1,13 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 
-export const Board = ({
-  onPress,
-  name,
-}: {
-  onPress: VoidFunction;
-  name: string;
-}) => {
+const Board = ({ onPress, name }: { onPress: VoidFunction; name: string }) => {
   return (
     <Pressable
       style={{
@@ -25,3 +19,5 @@ export const Board = ({
     </Pressable>
   );
 };
+
+export default Board;

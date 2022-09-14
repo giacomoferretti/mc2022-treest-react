@@ -24,12 +24,10 @@ const logger = new ConsoleLogger({ tag: "FirstTimeScreen" });
 const FirstTimeScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
   const { sessionId, skipFirstTime, setSkipFirstTime } = useGlobal();
-
   const [name, setName] = useState("");
 
-  const onPress = () => {
+  const onNextPage = () => {
     logger.log("Go to next page with name =", name);
 
     TreEstApi.setProfile({
@@ -53,12 +51,6 @@ const FirstTimeScreen = () => {
       enabled={Platform.OS === "ios"}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         {/* Header */}
-        {/* <LogoIcon
-          fill="black"
-          width={64}
-          height={64}
-          style={{ marginBottom: 16 }}
-        /> */}
         <View>
           <MaterialIcons
             name="train"
@@ -88,12 +80,11 @@ const FirstTimeScreen = () => {
         </View>
 
         {/* TODO: Create reusable component */}
-        {/* Button */}
         <Pressable
-          style={name ? styles.button : styles.buttonDisabled}
+          style={[styles.button, !name && { backgroundColor: "gray" }]}
           disabled={!name}
-          onPress={onPress}>
-          <Text style={styles.text}>Va bene così!</Text>
+          onPress={onNextPage}>
+          <Text style={{ color: "white" }}>Va bene così!</Text>
         </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -101,30 +92,10 @@ const FirstTimeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  button: {
+  container: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 9999,
-    elevation: 0,
-    backgroundColor: "#006E03",
-  },
-  buttonDisabled: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 9999,
-    elevation: 0,
-    backgroundColor: "gray",
-  },
-  text: {
-    // fontSize: 16,
-    // lineHeight: 21,
-    // fontWeight: "bold",
-    // letterSpacing: 0.25,
-    color: "white",
   },
   title: {
     fontSize: 24,
@@ -145,31 +116,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  // button: {
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  //   paddingVertical: 12,
-  //   paddingHorizontal: 32,
-  //   borderRadius: 4,
-  //   elevation: 0,
-  //   backgroundColor: "black",
-  // },
-  // text: {
-  //   fontSize: 16,
-  //   lineHeight: 21,
-  //   fontWeight: "bold",
-  //   letterSpacing: 0.25,
-  //   color: "white",
-  // },
-  container: {
-    flex: 1,
+  button: {
     alignItems: "center",
     justifyContent: "center",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 9999,
+    elevation: 0,
+    backgroundColor: "#006E03",
   },
 });
 

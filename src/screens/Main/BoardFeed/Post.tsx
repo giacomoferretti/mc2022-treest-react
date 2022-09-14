@@ -1,4 +1,4 @@
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
@@ -8,8 +8,8 @@ import { Post as PostType } from "@/api/treest/types";
 import CheckBox from "@/components/CheckBox";
 import { useGlobal } from "@/context/global.context";
 import { ConsoleLogger } from "@/utils/Logger";
-import * as Storage from "@/utils/Storage";
 import { formatDate, parseDate } from "@/utils/date";
+import * as Storage from "@/utils/storage";
 
 // type PostProps = {
 //   name: string;

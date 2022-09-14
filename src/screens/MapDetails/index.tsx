@@ -1,55 +1,41 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as Location from "expo-location";
-import { LocationObject } from "expo-location";
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text } from "react-native";
-import MapView, { Marker, Polyline, Region } from "react-native-maps";
+import { StyleSheet } from "react-native";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import * as TreEstApi from "@/api/treest";
 import { Station } from "@/api/treest/types";
-import { useGlobal } from "@/context/global.context";
+import { useMainGlobal } from "@/context/global.context";
 import { RootStackParamList } from "@/types/navigation";
 import { ConsoleLogger } from "@/utils/Logger";
+import { locationPermissionAsync } from "@/utils/location";
 
 const logger = new ConsoleLogger({ tag: "MapDetails" });
-
-const locationPermissionAsync = async () => {
-  let canUseLocation = false;
-  const grantedPermission = await Location.getForegroundPermissionsAsync();
-  if (grantedPermission.status === "granted") {
-    canUseLocation = true;
-  } else {
-    const permissionResponse =
-      await Location.requestForegroundPermissionsAsync();
-    if (permissionResponse.status === "granted") {
-      canUseLocation = true;
-    }
-  }
-
-  if (canUseLocation) {
-    const location = await Location.getCurrentPositionAsync();
-    console.log("received location:", location);
-    console.log(location.coords.latitude + " - " + location.coords.longitude);
-    return location;
-  }
-
-  return canUseLocation;
-};
 
 const MapDetails = ({
   route,
 }: NativeStackScreenProps<RootStackParamList, "MapDetails">) => {
   const { directionId } = route.params;
-  const { sessionId } = useGlobal();
+  const { sessionId } = useMainGlobal();
+  const map = useRef<MapView>(null);
 
-  const [location, setLocation] = useState<LocationObject>();
+  // const [location, setLocation] = useState<LocationObject>();
   const [stations, setStations] = useState<Station[]>();
 
   useEffect(() => {
-    locationPermissionAsync().then((asd) => setLocation(asd as LocationObject));
+    locationPermissionAsync().then((granted) => {
+      if (granted)
+        Location.getCurrentPositionAsync().then((location) => {
+          logger.log("Received location:", location);
+          logger.log(
+            location.coords.latitude + " - " + location.coords.longitude
+          );
+        });
+    });
 
-    TreEstApi.getStations({ sid: sessionId!, did: directionId }).then((v) => {
+    TreEstApi.getStations({ sid: sessionId, did: directionId }).then((v) => {
       logger.log(v);
       setStations(v);
       map.current?.fitToCoordinates(
@@ -57,21 +43,11 @@ const MapDetails = ({
         { edgePadding: { top: 100, left: 100, right: 100, bottom: 100 } }
       );
     });
-  }, []);
-
-  const map = useRef<MapView>(null);
+  }, [directionId, sessionId]);
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <Text>
-        MapDetails {directionId} {JSON.stringify(location)}
-      </Text> */}
-
-      {/* <MapView style={{ ...StyleSheet.absoluteFillObject }} /> */}
-      <MapView
-        ref={map}
-        style={{ width: "100%", height: "100%" }}
-        showsUserLocation={true}>
+      <MapView ref={map} style={styles.map} showsUserLocation={true}>
         {stations &&
           stations.map((station) => {
             return (
@@ -104,6 +80,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  map: {
+    width: "100%",
+    height: "100%",
   },
 });
 

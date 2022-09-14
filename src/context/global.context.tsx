@@ -31,6 +31,20 @@ export const useGlobal = () => {
   return useContext(GlobalContext);
 };
 
+export const useMainGlobal = () => {
+  const context = useContext(GlobalContext);
+
+  if (!context.sessionId) {
+    throw new Error(
+      "User reached logged-in-only component with null 'sessionId' in context"
+    );
+  }
+
+  return context as Omit<GlobalContextType, "sessionId"> & {
+    sessionId: string;
+  };
+};
+
 const STORAGE_KEYS = {
   SID: "sessionId",
   DID: "directionId",
