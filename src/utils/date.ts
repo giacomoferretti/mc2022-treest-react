@@ -1,5 +1,9 @@
 export const parseDate = (date: string) => {
-  const result = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/.exec(date)!;
+  const result = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/.exec(date);
+
+  if (!result) {
+    throw new Error("Wrong input date format. Should be yyyy-MM-dd HH:mm:ss");
+  }
 
   return new Date(
     +result[1],
