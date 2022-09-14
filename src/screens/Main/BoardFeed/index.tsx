@@ -76,7 +76,10 @@ const BoardFeed = () => {
           justifyContent: "space-between",
           alignItems: "center",
         }}>
-        <Pressable>
+        <Pressable
+          onPress={() =>
+            navigation.navigate("MapDetails", { directionId: directionId! })
+          }>
           <MaterialIcons name="map" size={24} color="#006E03" />
         </Pressable>
         <LineSwitchButtons line={lineData!} />

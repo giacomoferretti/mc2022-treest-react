@@ -3152,6 +3152,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/geojson@npm:^7946.0.7":
+  version: 7946.0.10
+  resolution: "@types/geojson@npm:7946.0.10"
+  checksum: 12c407c2dc93ecb26c08af533ee732f1506a9b29456616ba7ba1d525df96206c28ddf44a528f6a5415d7d22893e9d967420940a9c095ee5e539c1eba5fefc1f4
+  languageName: node
+  linkType: hard
+
 "@types/graceful-fs@npm:^4.1.2":
   version: 4.1.5
   resolution: "@types/graceful-fs@npm:4.1.5"
@@ -6303,6 +6310,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-location@npm:~14.3.0":
+  version: 14.3.0
+  resolution: "expo-location@npm:14.3.0"
+  dependencies:
+    "@expo/config-plugins": ~5.0.0
+  peerDependencies:
+    expo: "*"
+  checksum: 0433f22aa3ef794997538c1d8d577858ae3e442a62f296c801c43cfe4f5909e6a3f27357b8a4de757cffe84968f5dca2be9e5dbe20e064e73a7206d6768ab6ea
+  languageName: node
+  linkType: hard
+
 "expo-modules-autolinking@npm:0.10.3":
   version: 0.10.3
   resolution: "expo-modules-autolinking@npm:0.10.3"
@@ -9408,6 +9426,7 @@ __metadata:
     expo-device: ~4.3.0
     expo-font: ~10.2.0
     expo-linking: ~3.2.2
+    expo-location: ~14.3.0
     expo-splash-screen: ~0.16.2
     expo-sqlite: ~10.3.0
     expo-status-bar: ~1.4.0
@@ -9420,6 +9439,7 @@ __metadata:
     react: 18.0.0
     react-dom: 18.0.0
     react-native: 0.69.5
+    react-native-maps: 0.31.1
     react-native-root-toast: ^3.4.0
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
@@ -11270,6 +11290,23 @@ __metadata:
   version: 0.0.7
   resolution: "react-native-gradle-plugin@npm:0.0.7"
   checksum: 959ce3bcbc8362909210fae894e4b414a0afdff39fe1683463214b7feddae6beaf8584ebe62323b1e91ba31de00311e826588e0d807c93a949e445b1770cac27
+  languageName: node
+  linkType: hard
+
+"react-native-maps@npm:0.31.1":
+  version: 0.31.1
+  resolution: "react-native-maps@npm:0.31.1"
+  dependencies:
+    "@types/geojson": ^7946.0.7
+    deprecated-react-native-prop-types: ^2.3.0
+  peerDependencies:
+    react: ">= 16.0"
+    react-native: ">= 0.51"
+    react-native-web: ">= 0.11"
+  peerDependenciesMeta:
+    react-native-web:
+      optional: true
+  checksum: 0afe7ca5c3b017bcc84503114260abf7db71c28f1fa4c11495ffa01ada33d37a84b60f54ab80ba206bd967caa1003c4245639c877a7cef485c96b98778666f40
   languageName: node
   linkType: hard
 

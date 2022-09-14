@@ -15,6 +15,7 @@ export type RootStackParamList = {
   FirstTime: undefined;
   BoardSelection: undefined;
   Main: NavigatorScreenParams<RootTabParamList> | undefined;
+  MapDetails: { directionId: number };
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

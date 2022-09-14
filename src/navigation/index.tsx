@@ -11,6 +11,7 @@ import FirstTimeScreen from "@/screens/FirstTime";
 import BoardFeed from "@/screens/Main/BoardFeed";
 import NewPost from "@/screens/Main/NewPost";
 import Profile from "@/screens/Main/Profile";
+import MapDetails from "@/screens/MapDetails";
 import { RootStackParamList, RootTabParamList } from "@/types/navigation";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -32,6 +33,11 @@ const Navigation = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
         <Stack.Screen
           name="Main"
           component={BottomTabNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MapDetails"
+          component={MapDetails}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
