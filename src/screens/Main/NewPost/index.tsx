@@ -17,6 +17,13 @@ const NewPost = () => {
   const [status, setStatus] = useState<Status | undefined>();
 
   const submitPost = () => {
+    if (!comment || !delay || !status) {
+      Toast.show("Devi compilare almeno un campo.", {
+        duration: Toast.durations.LONG,
+      });
+      return;
+    }
+
     TreEstApi.addPost({
       sid: sessionId!,
       did: directionId!,
