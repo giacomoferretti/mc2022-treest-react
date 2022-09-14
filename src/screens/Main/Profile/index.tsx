@@ -24,9 +24,7 @@ const ProfileImage = () => {
     const loadProfile = async () => {
       const profile = await TreEstApi.getProfile({ sid: sessionId });
 
-      console.log(profile.picture);
-
-      setImage(`data:image/png;base64,${profile.picture}`);
+      if (profile.picture) setImage(`data:image/png;base64,${profile.picture}`);
     };
 
     loadProfile();

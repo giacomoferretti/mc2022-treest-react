@@ -1,7 +1,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -15,51 +16,40 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import * as TreEstApi from "@/api/treest";
 import { Post as PostType } from "@/api/treest/types";
-import { useGlobal } from "@/context/global.context";
+import { useMainGlobal } from "@/context/global.context";
 import { RootStackParamList } from "@/types/navigation";
 
 import { LineSwitchButtons } from "./LineSwitchButtons";
 import { Post } from "./Post";
 
 const BoardFeed = () => {
-  const { sessionId, directionId, lineData, setDirectionId } = useGlobal();
+  const { sessionId, directionId, lineData, setDirectionId } = useMainGlobal();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
   const [posts, setPosts] = useState<PostType[]>([]);
-
   const [isLoading, setIsLoading] = useState(true);
 
   const renderItem: ListRenderItem<PostType> = ({ item }) => {
-    // console.log(item);
-
-    return (
-      <Post
-        {...item}
-        refresh={() => {
-          // console.log("loge");
-          setIsLoading(true);
-        }}
-      />
-    );
+    return <Post {...item} refresh={() => setIsLoading(true)} />;
   };
 
+  const isFocused = useIsFocused();
+
+  const loadPosts = useCallback(async () => {
+    setPosts([]);
+
+    const response = await TreEstApi.getPosts({
+      sid: sessionId,
+      did: directionId!,
+    });
+
+    setPosts(response.posts);
+    setIsLoading(false);
+  }, [directionId, sessionId]);
+
   useEffect(() => {
-    const load = async () => {
-      setPosts([]);
-
-      const response = await TreEstApi.getPosts({
-        sid: sessionId!,
-        did: directionId!,
-      });
-
-      setPosts(response.posts);
-      setIsLoading(false);
-    };
-
-    load().catch((error) => console.error(error));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [directionId, isLoading]);
+    loadPosts().catch((error) => console.error(error));
+  }, [isFocused, isLoading, loadPosts]);
 
   const selectBoard = () => {
     setDirectionId(null);

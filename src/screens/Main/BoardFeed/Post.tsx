@@ -6,7 +6,7 @@ import * as TreEstApi from "@/api/treest";
 import { DelayDisplayValue, StatusDisplayValue } from "@/api/treest/types";
 import { Post as PostType } from "@/api/treest/types";
 import CheckBox from "@/components/CheckBox";
-import { useGlobal } from "@/context/global.context";
+import { useGlobal, useMainGlobal } from "@/context/global.context";
 import { ConsoleLogger } from "@/utils/Logger";
 import { formatDate, parseDate } from "@/utils/date";
 import * as Storage from "@/utils/storage";
@@ -35,27 +35,8 @@ export const Post = ({
   pversion,
   refresh,
 }: PostType & { refresh: VoidFunction }) => {
-  const { sessionId } = useGlobal();
-  // const [isFollowing, setIsFollowing] = useState(false);
-
-  // const [profilePicture, setProfilePicture] = useState();
-
-  // useEffect(() => {
-
-  // });
-  // logger.log({
-  //   author,
-  //   datetime,
-  //   comment,
-  //   delay,
-  //   status,
-  //   followingAuthor,
-  //   authorName,
-  //   pversion,
-  // });
-
+  const { sessionId } = useMainGlobal();
   const [checked, onChange] = useState(followingAuthor);
-
   const [picture, setPicture] = useState<string | null>(null);
 
   useEffect(() => {
@@ -70,7 +51,7 @@ export const Post = ({
 
           // Download image
           const remotePicture = await TreEstApi.getUserPicture({
-            sid: sessionId!,
+            sid: sessionId,
             uid: author,
           });
 
@@ -94,23 +75,14 @@ export const Post = ({
     onChange(isChecked);
 
     if (isChecked) {
-      TreEstApi.follow({ sid: sessionId!, uid: author }).then(() => refresh());
+      TreEstApi.follow({ sid: sessionId, uid: author }).then(() => refresh());
     } else {
-      TreEstApi.unfollow({ sid: sessionId!, uid: author }).then(() =>
-        refresh()
-      );
+      TreEstApi.unfollow({ sid: sessionId, uid: author }).then(() => refresh());
     }
   };
 
   return (
-    <View
-      style={{
-        width: "100%",
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 16,
-        marginBottom: 16,
-      }}>
+    <View style={[styles.card, followingAuthor && styles.following]}>
       {/* Left panel */}
       <View style={{ flexDirection: "row" }}>
         <View>
@@ -184,6 +156,13 @@ export const Post = ({
 };
 
 const styles = StyleSheet.create({
+  card: {
+    width: "100%",
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 16,
+    marginBottom: 16,
+  },
   chipContainer: {
     backgroundColor: "lightgray",
     borderRadius: 9999,
@@ -193,5 +172,9 @@ const styles = StyleSheet.create({
   },
   chipText: {
     fontSize: 12,
+  },
+  following: {
+    backgroundColor: "#E7F1E1",
+    borderColor: "#006E03",
   },
 });
