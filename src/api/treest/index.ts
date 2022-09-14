@@ -37,17 +37,19 @@ export const request = async <T>(
 ): Promise<T> => {
   logger.log(`POST ${endpoint} = ${JSON.stringify(data)}`);
 
-  const response = await (
-    await fetch(`${BASE_API_URL}/${endpoint}.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: data ? JSON.stringify(data) : null,
-    })
-  ).json();
+  const response = await fetch(`${BASE_API_URL}/${endpoint}.php`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: data ? JSON.stringify(data) : null,
+  });
 
-  return response;
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
+
+  return await response.json();
 };
 
 export const register = async (): Promise<SidRequest> => {
