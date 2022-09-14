@@ -3,6 +3,10 @@ import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 
+import { ConsoleLogger } from "@/utils/Logger";
+
+const logger = new ConsoleLogger({ tag: "useCachedResources" });
+
 const useCachedResources = () => {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
@@ -21,7 +25,7 @@ const useCachedResources = () => {
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
-        console.warn(e);
+        logger.warn(e);
       } finally {
         setLoadingComplete(true);
         SplashScreen.hideAsync();

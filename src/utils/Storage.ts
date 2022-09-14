@@ -18,18 +18,11 @@ const logger = new ConsoleLogger({ tag: "Storage" });
 
 export const db = SQLite.openDatabase("treest");
 
-// db.transaction((tx) => {
-//   tx.executeSql(queries.DROP_TABLE);
-//   logger.log("`user_picture` deleted.");
-// });
-
-db.transaction((tx) => {
-  tx.executeSql(queries.CREATE_TABLE);
-  logger.log("`user_picture` created.");
-});
-
-const transactionPromise = (sql: string, args?: (number | string | null)[]) => {
-  return new Promise<unknown[]>((resolve, reject) => {
+const transactionPromise = <T>(
+  sql: string,
+  args?: (number | string | null)[]
+) => {
+  return new Promise<T[]>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
         sql,
@@ -46,6 +39,20 @@ const transactionPromise = (sql: string, args?: (number | string | null)[]) => {
   });
 };
 
+const initDb = () => {
+  db.transaction((tx) => {
+    tx.executeSql(queries.CREATE_TABLE);
+    logger.log("`user_picture` created.");
+  });
+};
+
+const clearDb = () => {
+  db.transaction((tx) => {
+    tx.executeSql(queries.DROP_TABLE);
+    logger.log("`user_picture` deleted.");
+  });
+};
+
 export const getAllRows = async () => {
   return await transactionPromise(queries.SELECT_ALL);
 };
@@ -59,13 +66,13 @@ export const insertPicture = async (input: UserPicture) => {
 };
 
 export const loadPicture = async (input: Omit<UserPicture, "picture">) => {
-  const result = await transactionPromise(queries.FIND, [
+  const result = await transactionPromise<UserPicture>(queries.FIND, [
     input.uid,
     input.pversion,
   ]);
 
   if (result.length !== 0) {
-    return (result[0] as UserPicture).picture;
+    return result[0].picture;
   } else {
     return null;
   }
@@ -80,4 +87,5 @@ export const hasPicture = async (input: Omit<UserPicture, "picture">) => {
   return result.length > 0;
 };
 
-// getAllRows().then((result) => logger.log(result));
+// Initialize database
+initDb();

@@ -5,7 +5,7 @@ import Toast from "react-native-root-toast";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import * as TreEstApi from "@/api/treest";
-import { DelayDisplayValue, StatusDisplayValue } from "@/api/treest/objects";
+import { DelayDisplayValue, StatusDisplayValue } from "@/api/treest/types";
 import { Delay, Status } from "@/api/treest/types";
 import { useGlobal } from "@/context/global.context";
 

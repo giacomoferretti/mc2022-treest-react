@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-} from "react";
+import { createContext, useContext, useEffect } from "react";
 
 import * as TreEstApi from "@/api/treest";
 import { Line } from "@/api/treest/types";
@@ -12,46 +6,6 @@ import { useAsyncStorage } from "@/hooks";
 import { ConsoleLogger } from "@/utils/Logger";
 
 const logger = new ConsoleLogger({ tag: "GlobalContext" });
-
-const usePrevious = <T,>(value: T, initialValue: T) => {
-  const ref = useRef(initialValue);
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-};
-
-const useEffectDebugger = (
-  effectHook: any,
-  dependencies: any,
-  dependencyNames: any = []
-) => {
-  const previousDeps = usePrevious(dependencies, []);
-
-  const changedDeps = dependencies.reduce(
-    (accum: any, dependency: any, index: any) => {
-      if (dependency !== previousDeps[index]) {
-        const keyName = dependencyNames[index] || index;
-        return {
-          ...accum,
-          [keyName]: {
-            before: previousDeps[index],
-            after: dependency,
-          },
-        };
-      }
-
-      return accum;
-    },
-    {}
-  );
-
-  if (Object.keys(changedDeps).length) {
-    logger.log("[use-effect-debugger] ", changedDeps);
-  }
-
-  useEffect(effectHook, dependencies);
-};
 
 type GlobalContextType = {
   sessionId: string | null; // sid

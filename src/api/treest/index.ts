@@ -2,6 +2,7 @@ import { ConsoleLogger } from "@/utils/Logger";
 
 import {
   AddPostRequest,
+  Line,
   LinesResponse,
   PostsResponse,
   Profile,
@@ -30,8 +31,11 @@ export type Endpoints =
   | "follow"
   | "unfollow";
 
-export const request = async (endpoint: Endpoints, data?: unknown) => {
-  logger.log(` REQUEST = ${endpoint}(${JSON.stringify(data)})`);
+export const request = async <T>(
+  endpoint: Endpoints,
+  data?: unknown
+): Promise<T> => {
+  logger.log(`POST ${endpoint} = ${JSON.stringify(data)}`);
 
   const response = await (
     await fetch(`${BASE_API_URL}/${endpoint}.php`, {
@@ -43,11 +47,6 @@ export const request = async (endpoint: Endpoints, data?: unknown) => {
     })
   ).json();
 
-  // logger.log(
-  //   `RESPONSE = ${endpoint}(${JSON.stringify(data)}) = ${JSON.stringify(
-  //     response
-  //   )}`
-  // );
   return response;
 };
 
@@ -65,12 +64,12 @@ export const setProfile = async (
   return await request("setProfile", data);
 };
 
-export const getLines = async (data: SidRequest): Promise<LinesResponse> => {
-  return await request("getLines", data);
+export const getLines = async (data: SidRequest): Promise<Line[]> => {
+  return (await request<LinesResponse>("getLines", data)).lines;
 };
 
 export const getStations = async (data: SidDidRequest): Promise<Station[]> => {
-  const response: StationsResponse = await request("getStations", data);
+  const response = await request<StationsResponse>("getStations", data);
 
   return response.stations.map((x) => {
     return {

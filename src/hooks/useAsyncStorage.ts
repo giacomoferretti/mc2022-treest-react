@@ -3,28 +3,25 @@ import { useEffect, useState } from "react";
 
 import { ConsoleLogger } from "@/utils/Logger";
 
-const logger = new ConsoleLogger({ tag: "AsyncStorage" });
+const logger = new ConsoleLogger({ tag: "useAsyncStorage" });
 
 const useAsyncStorage = <T>(key: string, initialValue: T) => {
   const [isLoading, setIsLoading] = useState(true);
   const [storedValue, setStoredValue] = useState<T>(initialValue);
 
   // Debugging purposes only
-
   useEffect(() => {
-    logger.log(`useAsyncStorage(${key}, ${initialValue})`, "Mounted!");
+    logger.log(`(${key}, ${initialValue})`, "Mounted!");
 
     return () => {
-      logger.log(`useAsyncStorage(${key}, ${initialValue})`, "Unmounted!");
+      logger.log(`(${key}, ${initialValue})`, "Unmounted!");
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    logger.log(
-      `useAsyncStorage(${key}, ${initialValue})`,
-      "isLoading =",
-      isLoading
-    );
+    logger.log(`(${key}, ${initialValue})`, "isLoading =", isLoading);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
   useEffect(() => {
@@ -33,13 +30,9 @@ const useAsyncStorage = <T>(key: string, initialValue: T) => {
       const value = await AsyncStorage.getItem(key);
 
       if (value) {
-        logger.log(`useAsyncStorage(${key}, ${initialValue})`, "Found", value);
+        logger.log(`(${key}, ${initialValue})`, "Found", value);
       } else {
-        logger.log(
-          `useAsyncStorage(${key}, ${initialValue})`,
-          "Nothing found for key",
-          key
-        );
+        logger.log(`(${key}, ${initialValue})`, "Nothing found for key", key);
       }
 
       setStoredValue(value === null ? initialValue : JSON.parse(value));
@@ -52,8 +45,7 @@ const useAsyncStorage = <T>(key: string, initialValue: T) => {
   const setValue = (value: T | ((val: T) => T)) => {
     const valueToStore = value instanceof Function ? value(storedValue) : value;
 
-    logger.log("Saving", valueToStore);
-
+    logger.log(`(${key}, ${initialValue})`, "Saving", valueToStore);
     setStoredValue(valueToStore);
 
     try {

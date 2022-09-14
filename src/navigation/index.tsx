@@ -3,10 +3,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ColorSchemeName } from "react-native";
-import { View } from "react-native";
 
 import BoardSelectionScreen from "@/screens/BoardSelection";
-// import CounterScreen from "@/screens/CounterScreen";
 import FirstTimeScreen from "@/screens/FirstTime";
 import BoardFeed from "@/screens/Main/BoardFeed";
 import NewPost from "@/screens/Main/NewPost";
@@ -55,7 +53,7 @@ const BottomTabNavigator = () => {
       initialRouteName="BoardFeed"
       screenOptions={{
         tabBarInactiveTintColor: "#42473E",
-        tabBarActiveTintColor: "#121F0E", //Colors[colorScheme].tint,
+        tabBarActiveTintColor: "#121F0E", // Colors[colorScheme].tint,
         tabBarStyle: {
           height: 64, // 49 default
           backgroundColor: "#E7F1E1",

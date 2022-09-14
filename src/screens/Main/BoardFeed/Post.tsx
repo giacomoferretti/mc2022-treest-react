@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
 import * as TreEstApi from "@/api/treest";
-import { DelayDisplayValue, StatusDisplayValue } from "@/api/treest/objects";
+import { DelayDisplayValue, StatusDisplayValue } from "@/api/treest/types";
 import { Post as PostType } from "@/api/treest/types";
-import { CheckBox } from "@/components/CheckBox";
+import CheckBox from "@/components/CheckBox";
 import { useGlobal } from "@/context/global.context";
 import { ConsoleLogger } from "@/utils/Logger";
 import * as Storage from "@/utils/Storage";

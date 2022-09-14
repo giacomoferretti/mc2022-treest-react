@@ -1,24 +1,19 @@
-// import { LOG_LEVEL } from "./environment";
 import { Platform } from "react-native";
 
-/** Signature of a logging function */
 export interface LogFn {
   (message?: unknown, ...optionalParams: unknown[]): void;
 }
 
-/** Basic logger interface */
 export interface Logger {
   log: LogFn;
   warn: LogFn;
   error: LogFn;
 }
 
-/** Log levels */
 export type LogLevel = "log" | "warn" | "error";
 
 const NO_OP: LogFn = () => undefined;
 
-/** Logger which outputs to the browser console */
 export class ConsoleLogger implements Logger {
   readonly log: LogFn;
   readonly warn: LogFn;
